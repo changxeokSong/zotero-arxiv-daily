@@ -1,5 +1,5 @@
 zotero:
-  user_id: "18545288"
+  user_id: ${oc.env:ZOTERO_ID}
   api_key: ${oc.env:ZOTERO_KEY}
   include_path: null
   ignore_path: null
