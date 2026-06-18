@@ -2,6 +2,7 @@ zotero:
   user_id: ${oc.env:ZOTERO_ID}
   api_key: ${oc.env:ZOTERO_KEY}
   include_path: null
+  ignore_path: null # 👈 이 줄이 누락되어 에러가 났었습니다! 추가 완료.
 
 source:
   arxiv:
