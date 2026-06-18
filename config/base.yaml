@@ -1,5 +1,5 @@
 zotero:
-  user_id: ${oc.env:ZOTERO_ID} # 🎯 요청하신 대로 완벽하게 환경변수 처리 완료!
+  user_id: ${oc.env:ZOTERO_ID}
   api_key: ${oc.env:ZOTERO_KEY}
   include_path: null
   ignore_path: null
@@ -26,7 +26,7 @@ llm:
     base_url: ${oc.env:OPENAI_API_BASE} 
   generation_kwargs:
     max_tokens: 1024
-    model: llama-3.1-8b-instant # 🎯 지금 플레이그라운드에서 보고 계신 모델로 고정!
+    model: llama-3.1-8b-instant # 🎯 플레이그라운드에서 확인하신 모델 반영
   language: Korean
 
 reranker:
@@ -35,11 +35,15 @@ reranker:
     encode_kwargs:
       task: retrieval
       prompt_name: document
-  api: null
+  api:
+    key: null       # 🛠️ 구조를 지우지 않고 null로 남겨두어 테스트 에러를 방지합니다.
+    base_url: null
+    model: null
+    batch_size: null
 
 executor:
-  debug: ${oc.env:DEBUG,false}
+  debug: false     # 🤫 로그를 깨끗하게 만들기 위해 false 고정
   send_empty: false
-  max_paper_num: 8 # ⚠️ 6,000토큰 에러를 막기 위해 하루 최대 논문 수를 8개로 최적화했습니다.
+  max_paper_num: 8  # ⚠️ 6000 토큰 제한을 넘지 않게 논문 수 최적화
   source: ['arxiv']
-  reranker: local # 🔑 HF_TOKEN을 통해 로컬로 안전하게 다운로드합니다.
+  reranker: local   # 🔑 HF_TOKEN 인증을 통해 로컬로 매끄럽게 처리
