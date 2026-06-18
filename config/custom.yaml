@@ -1,26 +1,49 @@
 zotero:
   user_id: ${oc.env:ZOTERO_ID}
   api_key: ${oc.env:ZOTERO_KEY}
-  include_path: null # Or set a list of glob patterns, e.g. ["2026/survey/**","2026/reading-group/**"]
+  include_path: null
+  ignore_path: null # 👈 이 줄이 누락되어 에러가 났었습니다! 추가 완료.
+
+source:
+  arxiv:
+    category: ["cs.AI", "cs.CV", "cs.LG", "cs.CL"]
+    include_cross_list: true
+  biorxiv:
+    category: null
+  medrxiv:
+    category: null
 
 email:
   sender: ${oc.env:SENDER}
   receiver: ${oc.env:RECEIVER}
-  smtp_server: smtp.qq.com
+  smtp_server: smtp.naver.com
   smtp_port: 465
   sender_password: ${oc.env:SENDER_PASSWORD}
 
 llm:
   api:
-    key: ${oc.env:OPENAI_API_KEY}
-    base_url: ${oc.env:OPENAI_API_BASE}
+    key: ${oc.env:OPENAI_API_KEY}   
+    base_url: ${oc.env:OPENAI_API_BASE} 
   generation_kwargs:
-    model: gpt-4o-mini
+    max_tokens: 4096
+    model: llama-3.1-8b-instant
+  language: Korean
 
-source:
-  arxiv:
-    category: ["cs.AI","cs.CV","cs.LG","cs.CL"]
+reranker:
+  local:
+    model: jinaai/jina-embeddings-v5-text-nano
+    encode_kwargs:
+      task: retrieval
+      prompt_name: document
+  api:
+    key: null
+    base_url: null
+    model: null
+    batch_size: null
 
 executor:
-  debug: ${oc.env:DEBUG,null}
+  debug: ${oc.env:DEBUG,false}
+  send_empty: false
+  max_paper_num: 50
   source: ['arxiv']
+  reranker: local
