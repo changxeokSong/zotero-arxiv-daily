@@ -73,7 +73,7 @@ def test_affiliations_none_without_fulltext(llm_params):
     client = make_stub_openai_client()
     paper = make_sample_paper(full_text=None)
     result = paper.generate_affiliations(client, llm_params)
-    # generate_affiliations now returns empty list [] instead of None when full_text is None
+    # generate_affiliations returns empty list [] when full_text is None
     assert result == []
 
 
@@ -107,11 +107,12 @@ def test_affiliations_malformed_llm_output(llm_params):
     )
     paper = make_sample_paper()
     result = paper.generate_affiliations(client, llm_params)
-    # re.search for [...] will fail -> AttributeError -> caught -> returns empty list []
+    # JSON parse fails -> returns empty list []
     assert result == []
 
 
-def test_affiliations_error_returns_none(llm_params):
+def test_affiliations_error_returns_empty_list(llm_params):
+    """When API call raises an exception, returns empty list []"""
     from types import SimpleNamespace
 
     broken_client = SimpleNamespace(
@@ -121,6 +122,6 @@ def test_affiliations_error_returns_none(llm_params):
     )
     paper = make_sample_paper()
     result = paper.generate_affiliations(broken_client, llm_params)
-    # generate_affiliations now returns None on exception
-    assert result is None
-    assert paper.affiliations is None
+    # Exception caught -> returns empty list []
+    assert result == []
+    assert paper.affiliations == []
