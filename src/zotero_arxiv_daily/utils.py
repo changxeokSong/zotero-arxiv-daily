@@ -141,17 +141,28 @@ def glob_match(path:str, pattern:str) -> bool:
 
 def send_email(config:DictConfig, html:str):
     sender = config.email.sender
-    receiver = config.email.receiver
+    receiver_config = config.email.receiver
     password = config.email.sender_password
     smtp_server = config.email.smtp_server
     smtp_port = config.email.smtp_port
+    
+    # Convert receiver to list if it's a string
+    # Support both single email, comma-separated emails, or list of emails
+    if isinstance(receiver_config, str):
+        # Split by comma if multiple emails are provided
+        receivers = [email.strip() for email in receiver_config.split(',')]
+    elif isinstance(receiver_config, list):
+        receivers = receiver_config
+    else:
+        receivers = [str(receiver_config)]
+    
     def _format_addr(s):
         name, addr = parseaddr(s)
         return formataddr((Header(name, 'utf-8').encode(), addr))
 
     msg = MIMEText(html, 'html', 'utf-8')
     msg['From'] = _format_addr('Github Action <%s>' % sender)
-    msg['To'] = _format_addr('You <%s>' % receiver)
+    msg['To'] = ', '.join(receivers)
     today = datetime.datetime.now().strftime('%Y/%m/%d')
     msg['Subject'] = Header(f'Daily arXiv {today}', 'utf-8').encode()
 
@@ -167,5 +178,5 @@ def send_email(config:DictConfig, html:str):
             server = smtplib.SMTP(smtp_server, smtp_port)
 
     server.login(sender, password)
-    server.sendmail(sender, [receiver], msg.as_string())
+    server.sendmail(sender, receivers, msg.as_string())
     server.quit()

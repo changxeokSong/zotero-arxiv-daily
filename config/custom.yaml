@@ -15,7 +15,7 @@ source:
 
 email:
   sender: ${oc.env:SENDER}
-  receiver: ${oc.env:RECEIVER}
+  receiver: ${oc.env:RECEIVER}  # Support single email or comma-separated emails (e.g., "email1@example.com,email2@example.com")
   smtp_server: smtp.naver.com
   smtp_port: 465
   sender_password: ${oc.env:SENDER_PASSWORD}
