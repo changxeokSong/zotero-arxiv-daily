@@ -73,7 +73,8 @@ def test_affiliations_none_without_fulltext(llm_params):
     client = make_stub_openai_client()
     paper = make_sample_paper(full_text=None)
     result = paper.generate_affiliations(client, llm_params)
-    assert result is None
+    # generate_affiliations now returns empty list [] instead of None when full_text is None
+    assert result == []
 
 
 def test_affiliations_deduplicates(llm_params):
@@ -106,8 +107,8 @@ def test_affiliations_malformed_llm_output(llm_params):
     )
     paper = make_sample_paper()
     result = paper.generate_affiliations(client, llm_params)
-    # re.search for [...] will fail -> AttributeError -> caught -> returns None
-    assert result is None
+    # re.search for [...] will fail -> AttributeError -> caught -> returns empty list []
+    assert result == []
 
 
 def test_affiliations_error_returns_none(llm_params):
@@ -120,5 +121,6 @@ def test_affiliations_error_returns_none(llm_params):
     )
     paper = make_sample_paper()
     result = paper.generate_affiliations(broken_client, llm_params)
+    # generate_affiliations now returns None on exception
     assert result is None
     assert paper.affiliations is None
