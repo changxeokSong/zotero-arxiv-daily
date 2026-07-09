@@ -44,6 +44,6 @@ reranker:
 executor:
   debug: false     # 🤫 로그를 깨끗하게 만들기 위해 false 고정
   send_empty: false
-  max_paper_num: 8  # ⚠️ 6000 토큰 제한을 넘지 않게 논문 수 최적화
+  max_paper_num: 10  # ⚠️ 6000 토큰 제한을 넘지 않게 논문 수 최적화
   source: ['arxiv']
   reranker: local   # 🔑 HF_TOKEN 인증을 통해 로컬로 매끄럽게 처리
